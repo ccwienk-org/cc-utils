@@ -1,0 +1,38 @@
+name: test-forcepush
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: 1216679
+          private-key: ${{ secrets.AUTH_APP_KEY }}
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: ccwienk-org/cc-utils # explicit is better than implicit
+          #persist-credentials: false
+      #- uses: ccwienk-org/cc-utils/.github/actions/setup-git-identity@master
+      - name: test-forcepush
+        shell: bash
+        run: |
+          git config user.email "example@github.com"
+          git config user.name "just some bot"
+
+          git commit --allow-empty -m "test commit"
+
+          git config -l
+          echo -------
+
+          git push origin +@:master
