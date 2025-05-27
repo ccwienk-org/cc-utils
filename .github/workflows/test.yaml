@@ -1,0 +1,41 @@
+# XXX this workflow is intended for development/testing purposes
+# if pushed to a public repository (presumably github.com/gardener/cc-utils), this indicates
+# this happened by accident
+
+name: Test
+on:
+  push:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: first
+        run: |
+          echo "first step"
+          mkdir -p ../gardener/custom
+          cat <<EOF > ../gardener/custom/action.yaml
+          name: custom
+          runs:
+            using: composite
+            steps:
+              - name: custom-action
+                shell: bash
+                run: |
+                  echo xxx custom action
+                  pwd
+                  ls
+                  ls ..
+          EOF
+      - name: absent-action
+        if: ${{ '1' == '1' }} # true
+        uses: './../gardener/custom'
+      - name: last
+        run: |
+          echo "last step"
