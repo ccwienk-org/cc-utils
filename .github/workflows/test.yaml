@@ -1,0 +1,19 @@
+# XXX this workflow is intended for development/testing purposes
+# if pushed to a public repository (presumably github.com/gardener/cc-utils), this indicates
+# this happened by accident
+
+name: Test
+on:
+  push:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  upgrade-pullrequests:
+    uses: ./.github/workflows/upgrade-dependencies.yaml
+    secrets: inherit
+    with:
+      ocm-repositories: europe-docker.pkg.dev/gardener-project/releases
