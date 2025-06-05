@@ -114,3 +114,12 @@ runs:
 
           logger.info(f'found {upgrade_vector=}')
           # todo: actually create upgrade-pullrequest
+
+        summary = f'''\
+        ## Upgrade-Dependencies-Summary
+
+        Found {len(upgrade_pullrequests=)=}.
+        '''
+
+        with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
+          f.write(summary)
