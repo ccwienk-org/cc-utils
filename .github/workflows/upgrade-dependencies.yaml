@@ -40,7 +40,7 @@ jobs:
         with:
           app-id: ${{ vars.GARDENER_GITHUB_ACTIONS_APP_ID }}
           private-key: ${{ secrets.GARDENER_GITHUB_ACTIONS_PRIVATE_KEY }}
-      - uses: gardener/cc-utils/.github/actions/ocm-upgrade@master
+      - uses: ./.github/actions/ocm-upgrade
         with:
           component-descriptor: |
             ${{ inputs.component-desriptor || needs.prepare.outputs.component-descriptor }}
