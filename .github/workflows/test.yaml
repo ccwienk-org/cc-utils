@@ -14,3 +14,4 @@ defaults:
 jobs:
   upgrade-pullrequests:
     uses: ./.github/workflows/upgrade-dependencies.yaml
+    secrets: inherit
