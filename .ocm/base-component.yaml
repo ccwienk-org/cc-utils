@@ -1,7 +1,7 @@
 componentReferences:
   - name: gardener
     componentName: github.com/gardener/gardener
-    version: '1.100.0'
+    version: 'v1.110.0'
 labels:
   - name: cloud.gardener.cnudie/responsibles
     value:
