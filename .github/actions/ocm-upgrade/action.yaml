@@ -33,10 +33,10 @@ runs:
         cat <<EOF > /tmp/component-descriptor.yaml
         ${{ inputs.component-descriptor }}
         EOF
-        echo <<EOF > /tmp/ocm-repositories
+        cat <<EOF > /tmp/ocm-repositories
         ${{ inputs.ocm-repositories }}
         EOF
-        echo <<EOF > /tmp/github-token
+        cat <<EOF > /tmp/github-token
         ${{ inputs.github-token }}
         EOF
     - name: create-and-update-upgrade-pullrequests
