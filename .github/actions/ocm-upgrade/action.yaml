@@ -74,6 +74,8 @@ runs:
         with open('/tmp/ocm-repositories') as f:
           ocm_repositories = f.read().strip().split(',')
 
+        logger.info(f'{ocm_repositories=}')
+
         component_descriptor_lookup, version_lookup = ocm_upgrade.create_ocm_lookups(
           ocm_repositories=ocm_repositories,
         )
