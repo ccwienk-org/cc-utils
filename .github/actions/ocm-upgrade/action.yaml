@@ -101,6 +101,11 @@ runs:
         ):
           logger.info(f'processing {cref=}')
 
+          print(version_lookup(cref))
+          print('xxxxxxxxxxxxxxxx')
+          print(version_lookup(cref.component_id))
+          print('yyyyyyyyyyyyyy')
+
           upgrade_vector = ocm.gardener.find_upgrade_vector(
             component_id=cref.component_id,
             version_lookup=version_lookup,
