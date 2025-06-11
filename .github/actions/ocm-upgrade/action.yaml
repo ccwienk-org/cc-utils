@@ -93,7 +93,7 @@ runs:
 
         logger.info(f'{ocm_repositories=}')
 
-        component_descriptor_lookup, version_lookup = ocm_upgrade.create_ocm_lookups(
+        oci_client, component_descriptor_lookup, version_lookup = ocm_upgrade.create_ocm_lookups(
           ocm_repositories=ocm_repositories,
         )
 
@@ -141,6 +141,7 @@ runs:
           auto_merge=auto_merge,
           merge_method=merge_method,
           branch='${{ github.ref_name }}',
+          oci_client=oci_client,
         )
 
         summary = f'''\

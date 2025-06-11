@@ -5,6 +5,7 @@ import logging
 import os
 import subprocess
 import sys
+import zlib
 
 try:
     import ocm
@@ -32,6 +33,7 @@ logger = logging.getLogger(__name__)
 def create_ocm_lookups(
     ocm_repositories: collections.abc.Iterable[str],
 ) -> tuple[
+    oci.client.Client,
     ocm.ComponentDescriptorLookup,
     ocm.VersionLookup,
 ]:
@@ -53,7 +55,7 @@ def create_ocm_lookups(
         oci_client=oci_client,
     )
 
-    return component_descriptor_lookup, version_lookup
+    return oci_client, component_descriptor_lookup, version_lookup
 
 
 def create_diff_in_base_component(
@@ -140,6 +142,7 @@ def create_upgrade_pullrequest_diff(
 
 
 def retrieve_release_notes(
+    oci_client: oci.client.Client,
     github_api_lookup,
     component: ocm.Component,
     component_descriptor_lookup,
@@ -147,6 +150,33 @@ def retrieve_release_notes(
     git_helper,
     upgrade_vector,
 ) -> str | None:
+    logger.info(f'fetching release-notes for {component=}')
+
+    for resource in component.resources:
+        if resource.name == 'release-notes':
+            break
+    else:
+        resource = None
+
+    if resource:
+        access: ocm.LocalBlobAccess = resource.access
+        oci_ref = component.current_ocm_repo.component_version_oci_ref(
+            name=component.name,
+            version=component.version,
+        )
+
+        release_notes_blob = oci_client.blob(
+            image_reference=oci_ref,
+            digest=access.localReference,
+        )
+
+        if access.mediaType.endswith('/gzip'):
+            release_notes_bytes = zlib.decompress(release_notes_blob.content, wbits=31)
+        else:
+            release_notes_bytes = release_notes_blob.content
+
+        return release_notes_bytes.decode('utf-8')
+
     try:
         release_notes_blocks = release_notes.fetch.fetch_release_notes(
             component=component,
@@ -180,6 +210,7 @@ def create_upgrade_pullrequest(
     auto_merge: bool,
     merge_method: str,
     branch: str,
+    oci_client: oci.client.Client,
 ) -> github.pullrequest.UpgradePullRequest | None:
     logger.info(f'found {upgrade_vector=}')
     git_helper = gitutil.GitHelper(
@@ -192,15 +223,6 @@ def create_upgrade_pullrequest(
             auth_type=gitutil.AuthType.PRESET,
         ),
     )
-    release_notes = retrieve_release_notes(
-        github_api_lookup=github_api_lookup,
-        component=component,
-        component_descriptor_lookup=component_descriptor_lookup,
-        version_lookup=version_lookup,
-        git_helper=git_helper,
-        upgrade_vector=upgrade_vector,
-    )
-
     from_component_descriptor = component_descriptor_lookup(
         upgrade_vector.whence,
         absent_ok=False,
@@ -211,6 +233,17 @@ def create_upgrade_pullrequest(
         upgrade_vector.whither,
     )
     to_component = to_component_descriptor.component
+
+    release_notes = retrieve_release_notes(
+        oci_client=oci_client,
+        github_api_lookup=github_api_lookup,
+        component=to_component,
+        component_descriptor_lookup=component_descriptor_lookup,
+        version_lookup=version_lookup,
+        git_helper=git_helper,
+        upgrade_vector=upgrade_vector,
+    )
+
 
     bom_diff_markdown = github.pullrequest.bom_diff(
         delivery_dashboard_url=None, # XXX add URL once delivery-dashboard is available publicly
@@ -273,6 +306,7 @@ def create_upgrade_pullrequests(
     auto_merge: bool,
     merge_method: str,
     branch: str,
+    oci_client: oci.client.Client,
 ):
     for cref in ocm.gardener.iter_component_references(
         component=component,
@@ -302,6 +336,7 @@ def create_upgrade_pullrequests(
             auto_merge=auto_merge,
             merge_method=merge_method,
             branch=branch,
+            oci_client=oci_client,
         )
 
 
