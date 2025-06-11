@@ -1,26 +1,26 @@
 component:
   name: github.com/gardener/cc-utils
 componentReferences:
-  - name: gardener
-    componentName: github.com/gardener/gardener
-    version: 'v1.110.0'
+- componentName: github.com/gardener/gardener
+  name: gardener
+  version: v1.120.1
 labels:
-  - name: cloud.gardener.cnudie/responsibles
-    value:
-      - type: githubTeam
-        teamname: gardener/ci-maintainers
-        github_hostname: github.com
-sources: []
-resources: []
-
+- name: cloud.gardener.cnudie/responsibles
+  value:
+  - github_hostname: github.com
+    teamname: gardener/ci-maintainers
+    type: githubTeam
 main-source:
   labels:
-    - name: gardener.cloud/purposes
-      value:
-        - lint
-        - sast
-        - pybandit
-    - name: gardener.cloud/comment
-      value: |
-        we use bandit (linter) for SAST scans
-      see: https://bandit.readthedocs.io/en/latest/
+  - name: gardener.cloud/purposes
+    value:
+    - lint
+    - sast
+    - pybandit
+  - name: gardener.cloud/comment
+    see: https://bandit.readthedocs.io/en/latest/
+    value: 'we use bandit (linter) for SAST scans
+
+      '
+resources: []
+sources: []
