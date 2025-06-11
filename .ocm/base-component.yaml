@@ -1,3 +1,5 @@
+component:
+  name: github.com/gardener/cc-utils
 componentReferences:
   - name: gardener
     componentName: github.com/gardener/gardener
