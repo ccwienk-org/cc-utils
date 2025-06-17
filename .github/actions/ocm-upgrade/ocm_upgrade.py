@@ -158,6 +158,11 @@ def retrieve_release_notes(
         absent_ok=True,
     )))
 
+    if release_notes:
+        logger.info(f'fetched {len(release_notes)=} characters of release-notes')
+    else:
+        logger.warning('did not find any release-notes')
+
     if not release_notes:
         return None
 
