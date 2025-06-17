@@ -150,7 +150,7 @@ def retrieve_release_notes(
 ) -> str | None:
     logger.info(f'fetching release-notes for {upgrade_vector=}')
 
-    release_notes = '\n'.join((rn for _, rn in rno.ocm.release_notes_range(
+    release_notes = '\n'.join((rn for _, rn in rno.release_notes_range(
         version_vector=upgrade_vector,
         versions=versions,
         oci_client=oci_client,
