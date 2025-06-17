@@ -312,7 +312,7 @@ def upgrade_pullrequest_body(
     return split_into_chunks_if_too_long(
         string=pr_body,
         split_hint='release-notes were too long (remainder will be appeneded as comments)',
-        max_leng=github.limits.pullrequest_body - 20000,
+        max_leng=github.limits.issue_body,
         max_chunk_leng=github.limits.comment_body,
     )
 
