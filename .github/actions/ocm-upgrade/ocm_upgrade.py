@@ -241,7 +241,7 @@ def create_upgrade_pullrequest(
         git_helper=git_helper,
         commit_message=commit_message,
         target_branch=branch,
-        delete_on_exit=not auto_merge,
+        delete_on_exit=auto_merge,
     ) as upgrade_branch_name:
         pull_request = repository.create_pull(
             title=github.pullrequest.upgrade_pullrequest_title(
@@ -255,14 +255,15 @@ def create_upgrade_pullrequest(
         for extra_bodypart in extra_bodyparts:
             pull_request.create_comment(body=extra_bodypart)
 
-    if not auto_merge:
-        return github.pullrequest.as_upgrade_pullrequest(pull_request)
+        if auto_merge:
+            logger.info(f'Merging PR#{pull_request.number} -> {branch=}')
+            pull_request.merge(
+                merge_method=merge_method,
+            )
 
-    logger.info(f'Merging PR#{pull_request.number} -> {branch=}')
+            return
 
-    pull_request.merge(
-        merge_method=merge_method,
-    )
+    return github.pullrequest.as_upgrade_pullrequest(pull_request)
 
 
 def create_upgrade_pullrequests(
