@@ -206,6 +206,7 @@ def create_upgrade_pullrequest(
     to_component = to_component_descriptor.component
 
     versions = [v for v in version_lookup(upgrade_vector.component_name) if version.is_final(v)]
+    logger.info(f'found {len(versions)=} versions of {upgrade_vector.component_name=}')
 
     release_notes = retrieve_release_notes(
         upgrade_vector=upgrade_vector,
