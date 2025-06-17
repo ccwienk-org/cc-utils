@@ -277,16 +277,16 @@ def upgrade_pullrequest_body(
         else:
             pr_body += split_release_notes[0]
 
-        if bom_diff_markdown:
-            if len(bom_diff_markdown) + len(pr_body) + 2 <= github.limits.pullrequest_body:
-                pr_body += '\n\n' + bom_diff_markdown
+    if bom_diff_markdown:
+        if len(bom_diff_markdown) + len(pr_body) + 2 <= github.limits.pullrequest_body:
+            pr_body += '\n\n' + bom_diff_markdown
+        else:
+            if github.limits.fits(bom_diff_markdown, github.limits.pullrequest_body):
+                additional_notes.append(bom_diff_markdown)
             else:
-                if github.limits.fits(bom_diff_markdown, github.limits.pullrequest_body):
-                    additional_notes.append(bom_diff_markdown)
-                else:
-                    component_details_start = bom_diff_markdown.find('## Component Details:')
-                    additional_notes.append(bom_diff_markdown[:component_details_start])
-                    additional_notes.append(bom_diff_markdown[component_details_start:])
+                component_details_start = bom_diff_markdown.find('## Component Details:')
+                additional_notes.append(bom_diff_markdown[:component_details_start])
+                additional_notes.append(bom_diff_markdown[component_details_start:])
 
     return pr_body, additional_notes
 
