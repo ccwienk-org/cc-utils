@@ -228,6 +228,8 @@ def create_upgrade_pullrequest(
         bom_diff_markdown=bom_diff_markdown,
     )
 
+    print(f'XXXXXXXXXXX {len(pullrequest_body=}')
+
     create_upgrade_pullrequest_diff(
         upgrade_vector=upgrade_vector,
         repo_dir=repo_dir,
