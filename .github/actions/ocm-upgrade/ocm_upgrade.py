@@ -227,6 +227,7 @@ def create_upgrade_pullrequest(
         release_notes=release_notes,
         bom_diff_markdown=bom_diff_markdown,
     )
+    print(f'XXXXXXX: prbody: {len(pullrequest_body)=}')
 
     create_upgrade_pullrequest_diff(
         upgrade_vector=upgrade_vector,
