@@ -76,7 +76,7 @@ runs:
 
         import ocm_upgrade
 
-        logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+        logging.basicConfig(stream=sys.stderr, level=logging.INFO)
         logger = logging.getLogger('ugrade-ocm')
 
         # silence annoying loggers
