@@ -250,6 +250,18 @@ def upload_helmchart(
 
     print(f'published helmchart to {target_ref=}')
 
+    return helmchart_resource(
+        helmchart_name=helmchart_name,
+        version=version,
+        target_ref=target_ref,
+    )
+
+
+def helmchart_resource(
+    helmchart_name: str,
+    version: str,
+    target_ref: str,
+) -> ocm.Resource:
     return ocm.Resource(
       name=helmchart_name,
       version=version,
