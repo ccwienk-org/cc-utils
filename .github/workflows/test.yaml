@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: test
         run: |
+          echo 'printing $ACTIONS_ID_TOKEN_REQUEST_TOKEN  $ACTIONS_ID_TOKEN_REQUEST_URL'
+          echo "printing $ACTIONS_ID_TOKEN_REQUEST_TOKEN  $ACTIONS_ID_TOKEN_REQUEST_URL"
           echo "printing github context"
           cat <<EOF >ctx.json
           ${{ toJSON(github) }}
