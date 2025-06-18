@@ -36,6 +36,11 @@ on:
           case, the `name` input will be appended to the end of the target-oci-reference.
         type: string
         required: false
+      push:
+        description: |
+          Whether or not to push the build helmchart.
+        type: boolean
+        default: true
       component-descriptor:
         description: |
           Use to explicitly pass-in the OCM-Component-Descriptor containing referenced OCI-Images.
@@ -98,6 +103,7 @@ jobs:
           dir: ${{ inputs.dir }}
           oci-registry: ${{ inputs.oci-registry }}
           oci-repository: ${{ inputs.oci-repository }}
+          push: ${{ inputs.push }}
           component-descriptor: ${{ steps.fetch-ocm.outputs.component-descriptor }}
           mappings: ${{ inputs.ocm-mappings }}
           gh-token: ${{ secrets.GITHUB_TOKEN }}

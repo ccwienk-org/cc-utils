@@ -37,6 +37,11 @@ on:
         type: string
         default: '{version}'
         required: false
+      push:
+        description: |
+          Whether or not to push the built image.
+        type: boolean
+        default: true
       target:
         description: |
           The (optional) target to build (passed to `docker build` as --target).
@@ -188,6 +193,7 @@ jobs:
     steps:
       - uses: docker/setup-buildx-action@v3
       - uses: gardener/cc-utils/.github/actions/oci-auth@master
+        if: ${{ inputs.push }}
         with:
           oci-image-reference: ${{ matrix.args.image-reference }}
           gh-token: ${{ secrets.GITHUB_TOKEN }}
@@ -212,7 +218,7 @@ jobs:
         uses: docker/build-push-action@v6
         id: build
         with:
-          push: true
+          push: ${{ inputs.push }}
           tags: ${{ matrix.args.image-reference }}
           context: '.'
           target: ${{ inputs.target }}
