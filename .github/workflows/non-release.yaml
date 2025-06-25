@@ -4,6 +4,12 @@ on:
   pull_request_target:
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test
+        run: |
+          echo "this is a test"
   build-and-test:
     uses: ./.github/workflows/build-and-test.yaml
     with:
