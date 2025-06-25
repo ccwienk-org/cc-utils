@@ -8,7 +8,7 @@
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
 ## What is it
-
+x
 `cc-utils` is a collection of re-usable utils intended to be used in the
 context of Continuous Integration and output qualification of components
 relevant for the [gardener](https://github.com/gardener) project.
