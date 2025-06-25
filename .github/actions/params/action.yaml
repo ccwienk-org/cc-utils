@@ -39,6 +39,11 @@ outputs:
     description: |
       true if current repository is a fork, else false
     value: ${{ steps.params.outputs.is-fork }}
+  is-pr-from-fork:
+    description: |
+      true if triggering event is `pull_request`, and underlying pullrequest stems from a fork that
+      does not belong to the same owner as the target repository.
+    value: ${{ steps.params.outputs.is-pr-from-fork }}
 
 runs:
   using: composite
@@ -83,18 +88,33 @@ runs:
             ;;
         esac
 
+        event_name='${{ github.event_name }}'
+        if [ ${event_name} != 'pull_request' ]; then
+          repo_owner='${{ github.repository_owner }}'
+          head_owner='${{ github.event.pull_request.head.repo.owner.login }}'
+          if [ ${repo_owner} == ${head_owner} ]; then
+            is_pr_from_fork=true
+          else
+            is_pr_from_fork=false
+          fi
+        else
+          is_pr_from_fork=false
+        fi
+
         echo "oci-registry=${oci_registry}" >> ${GITHUB_OUTPUT}
         echo "ocm-repository=${ocm_repository}" >> ${GITHUB_OUTPUT}
         echo "ocm-releases-repository=${ocm_releases_repository}" >> ${GITHUB_OUTPUT}
         echo "is-fork=${is_fork}" >> ${GITHUB_OUTPUT}
+        echo "is-pr-from-fork=${is_pr_from_fork}" >> ${GITHUB_OUTPUT}
 
         cat << EOF > ${GITHUB_STEP_SUMMARY}
         ## Pipeline-Params-Summary
 
         <table> <tbody>
-          <tr> <td>mode</td>           <td>${{ inputs.mode }}</td> </tr>
-          <tr> <td>oci-registry</td>   <td>${oci_registry}</td> </tr>
-          <tr> <td>ocm-repository</td> <td>${ocm_repository}</td> </tr>
-          <tr> <td>is-fork</td>        <td>${is_fork}</td> </tr>
+          <tr> <td>mode</td>            <td>${{ inputs.mode }}</td> </tr>
+          <tr> <td>oci-registry</td>    <td>${oci_registry}</td> </tr>
+          <tr> <td>ocm-repository</td>  <td>${ocm_repository}</td> </tr>
+          <tr> <td>is-fork</td>         <td>${is_fork}</td> </tr>
+          <tr> <td>is-pr-from-fork</td> <td>${is_pr_from_fork}</td> </tr>
         </tbody> </table>
         EOF
