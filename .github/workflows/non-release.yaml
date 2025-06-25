@@ -7,9 +7,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: test
+      - name: XXX
         run: |
-          echo "this is a test"
+          echo "XXX"
   build-and-test:
     uses: ./.github/workflows/build-and-test.yaml
     with:
